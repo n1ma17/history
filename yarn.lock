@@ -764,6 +764,11 @@
   "resolved" "https://registry.npmjs.org/commander/-/commander-2.20.3.tgz"
   "version" "2.20.3"
 
+"commander@^7.0.0":
+  "integrity" "sha512-QrWXB+ZQSVPmIWIhtEO9H+gwHaMGYiF5ChvoJ+K9ZGHG/sVsa6yiesAD1GC/x46sET00Xlwo1u49RVVVzvcSkw=="
+  "resolved" "https://registry.npmjs.org/commander/-/commander-7.2.0.tgz"
+  "version" "7.2.0"
+
 "compress-commons@^4.1.2":
   "integrity" "sha512-D3uMHtGc/fcO1Gt1/L7i1e33VOvD4A9hfQLP+6ewd+BvG/gQ84Yh4oftEhAdjSMgBgwGL+jsppT7JYNpo6MHHg=="
   "resolved" "https://registry.npmjs.org/compress-commons/-/compress-commons-4.1.2.tgz"
@@ -1515,7 +1520,7 @@
   "resolved" "https://registry.npmjs.org/inherits/-/inherits-2.0.4.tgz"
   "version" "2.0.4"
 
-"inquirer@^8.2.1":
+"inquirer@^8.0.0", "inquirer@^8.2.1":
   "integrity" "sha512-M1WuAmb7pn9zdFRtQYk26ZBoY043Sse0wVDdk4Bppr+JOXyQYybdtvK+l9wUibhtjdjvtoiNy8tk+EgsYIUqKg=="
   "resolved" "https://registry.npmjs.org/inquirer/-/inquirer-8.2.6.tgz"
   "version" "8.2.6"
@@ -1640,6 +1645,20 @@
   "integrity" "sha512-io974va+Qyu+UfuVX3UIAgJlxLhAMx9Y8VMfh+IG00Js7hXQo1qNQuwSiSa0xxco0SVgx5HWNkaiCcV+aZ8WPw=="
   "resolved" "https://registry.npmjs.org/jalaali-js/-/jalaali-js-1.2.6.tgz"
   "version" "1.2.6"
+
+"jalali-moment@^3.3.11":
+  "integrity" "sha512-tdSaRs9cjWjOIaWhcsGFZMhZQhfgok5J0TwqFpBIZPudZxxa6yjUPoLCOwuvbAtRpiZn7k/mvazAJh+vEN5suw=="
+  "resolved" "https://registry.npmjs.org/jalali-moment/-/jalali-moment-3.3.11.tgz"
+  "version" "3.3.11"
+  dependencies:
+    "commander" "^7.0.0"
+    "inquirer" "^8.0.0"
+    "moment" "^2.26.0"
+
+"jalaliday@^2.3.0":
+  "integrity" "sha512-B/m3TqsRrTFED/HBDqON6rPKe0MpoLxNICZ5uZeZ/scHJUHKQNr1n+wdZSj8MxrY1Bmo05gllZeNEw4beXd2oQ=="
+  "resolved" "https://registry.npmjs.org/jalaliday/-/jalaliday-2.3.0.tgz"
+  "version" "2.3.0"
 
 "js-yaml@^4.1.0":
   "integrity" "sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA=="
@@ -1851,6 +1870,11 @@
   "integrity" "sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA=="
   "resolved" "https://registry.npmjs.org/minimist/-/minimist-1.2.8.tgz"
   "version" "1.2.8"
+
+"moment@^2.26.0":
+  "integrity" "sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w=="
+  "resolved" "https://registry.npmjs.org/moment/-/moment-2.29.4.tgz"
+  "version" "2.29.4"
 
 "ms@2.0.0":
   "integrity" "sha512-Tpp60P6IUJDTuOq/5Z8cdskzJujfwqfOTkrwIwj7IRISpnkJnT6SyJ4PCPnGMoFjC9ddhal5KVIYtAt97ix05A=="

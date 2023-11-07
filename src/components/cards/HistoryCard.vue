@@ -28,12 +28,11 @@ export default {
 <style lang="scss" scoped>
 .card {
   width: 100%;
-  height: 100%;
-  background-color: fff;
+  height: 120px;
+  background-color: #fff;
   border-radius: 0 40px 0 40px;
   box-shadow: 0px 0px 11px 3px #e9e9e9;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
+  padding: 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;

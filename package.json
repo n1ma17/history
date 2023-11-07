@@ -17,6 +17,8 @@
     "axios": "^1.2.1",
     "dayjs": "^1.11.10",
     "dayjs-jalali": "^0.0.2",
+    "jalali-moment": "^3.3.11",
+    "jalaliday": "^2.3.0",
     "quasar": "^2.6.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0",

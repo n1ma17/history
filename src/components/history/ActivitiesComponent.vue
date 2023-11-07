@@ -119,13 +119,13 @@ export default {
       height: 100%;
       display: flex;
       flex-direction: column-reverse;
-      gap: 24px;
       overflow-y: scroll;
       overflow-x: hidden;
       padding: 24px;
       &__single-card {
         width: 100%;
-        height: 90px;
+        height: 100%;
+        margin: 16px 0;
         display: flex;
         justify-content: space-between;
         align-items: center;
