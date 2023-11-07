@@ -1,25 +1,6 @@
 <template>
   <q-header elevated class="header bg-white text-black">
     <div class="header__content">
-      <div class="header__content__download">
-        <q-btn
-          class="header__content__download__btn"
-          dense
-          rounded
-          :size="size"
-          color="green"
-          unelevated
-          label="نصب طاقچه"
-        />
-      </div>
-      <div class="header__content__logo">
-        <q-avatar>
-          <img
-            src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-black.svg"
-            class="q-pa-sm"
-          />
-        </q-avatar>
-      </div>
       <div class="header__content__action">
         <q-icon name="search" size="1.3rem" />
         <q-btn
@@ -55,6 +36,26 @@
           </q-menu>
         </q-btn>
       </div>
+      <div class="header__content__logo">
+        <q-avatar>
+          <img
+            src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-black.svg"
+            class="q-pa-sm"
+          />
+        </q-avatar>
+      </div>
+      <div class="header__content__download">
+        <q-btn
+          class="header__content__download__btn"
+          dense
+          rounded
+          :size="size"
+          color="green"
+          unelevated
+          label="نصب طاقچه"
+        />
+      </div>
+
     </div>
   </q-header>
 </template>
@@ -85,7 +86,7 @@ export default {
       height: 100%;
       display: flex;
       align-items: center;
-      justify-content: flex-start;
+      justify-content: flex-end;
       &__btn {
         width: 90px;
         height: 40px;
@@ -102,7 +103,7 @@ export default {
       height: 100%;
       display: flex;
       align-items: center;
-      justify-content: flex-end;
+      justify-content: flex-start;
       &__toggle-drawer {
         display: none;
         @media only screen and (max-width: 1024px) {

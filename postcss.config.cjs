@@ -22,6 +22,6 @@ module.exports = {
     // 1. yarn/npm install postcss-rtlcss
     // 2. optionally set quasar.config.js > framework > lang to an RTL language
     // 3. uncomment the following line:
-    require("postcss-rtlcss"),
+    require('postcss-rtlcss')({ source: 'rtl' }),
   ],
 };

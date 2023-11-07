@@ -27,12 +27,12 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   width: 100%;
   height: calc(100vh - 65px);
   &__activities {
     width: 100%;
-    height: 80%;
+    height: calc(100% - 60px);
     padding: 0 50px;
     @media only screen and (max-width: 1024px) {
       padding: 0 20px;
@@ -40,7 +40,7 @@ export default defineComponent({
   }
   &__calendar {
     width: 100%;
-    height: 20%;
+    height: 80px;
   }
 }
 </style>
