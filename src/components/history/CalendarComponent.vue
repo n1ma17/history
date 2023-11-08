@@ -25,8 +25,8 @@
           class="calendar__content__days__day fade"
           :class="+today === day.day ? 'active' : ''"
         >
-          <span>{{ day.label }}</span>
-          <span>{{ day.day }}</span>
+          <span  class="calendar__content__days__day__label">{{ day.label }}</span>
+          <span  class="calendar__content__days__day__number">{{ day.day }}</span>
         </div>
       </div>
       <div class="prev">
@@ -191,6 +191,27 @@ export default {
         min-width: 40px;
         height: 100%;
         margin: 0 4px;
+        border: 4px solid transparent;
+        border-radius: 8px;
+        cursor: pointer;
+        &__label {
+          font-size: 16px;
+          font-weight: 700;
+          color: #8d8d8d;
+        }
+        &__number {
+          font-size: 20px;
+          font-weight: 700;
+          color: #000;
+        }
+        &:hover {
+          background-color: #fff;
+          
+          margin-top: 24px;
+          box-shadow: 0px 0px 11px 3px #e9e9e9;
+          border: 4px solid aquamarine;
+          transition: all 0.5s ease-in-out;
+        }
       }
     }
   }
