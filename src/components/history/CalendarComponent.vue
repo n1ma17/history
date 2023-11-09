@@ -25,8 +25,12 @@
           class="calendar__content__days__day fade"
           :class="+today === day.day ? 'active' : ''"
         >
-          <span  class="calendar__content__days__day__label">{{ day.label }}</span>
-          <span  class="calendar__content__days__day__number">{{ day.day }}</span>
+          <span class="calendar__content__days__day__label">{{
+            day.label
+          }}</span>
+          <span class="calendar__content__days__day__number">{{
+            day.day
+          }}</span>
         </div>
       </div>
       <div class="prev">
@@ -50,8 +54,6 @@
         />
       </div>
     </div>
-
-    <!-- {{ $dayjs().calendar("jalali").locale("fa").format("dd MMMM YYYY") }} -->
   </div>
 </template>
 
@@ -112,17 +114,16 @@ export default {
     const today = ref(+jalaliMoment().locale("fa").format("DD"));
     const scrolltoToday = () => {
       document.getElementById("calendar__content__days").scrollLeft =
-        (today.value - 1) * -48;
-      document.getElementById("calendar__content__days").scrollLeft += 2 * 48;
+        (today.value - 1) * -32;
+      document.getElementById("calendar__content__days").scrollLeft += 2 * 32;
     };
     const scrollSlider = (index) => {
       if (index === 1) {
-        today.value--
-        document.getElementById("calendar__content__days").scrollLeft += 48;
-      }
-      else {
-        today.value++
-        document.getElementById("calendar__content__days").scrollLeft += -48;
+        today.value--;
+        document.getElementById("calendar__content__days").scrollLeft += 32;
+      } else {
+        today.value++;
+        document.getElementById("calendar__content__days").scrollLeft += -32;
       }
     };
     return {
@@ -154,6 +155,9 @@ export default {
     width: 33%;
     &__select-box {
       max-width: 200px;
+    }
+    @media only screen and (max-width: 768px) {
+      width: 25%;
     }
   }
   &__content {
@@ -195,24 +199,39 @@ export default {
         border-radius: 8px;
         cursor: pointer;
         &__label {
-          font-size: 16px;
-          font-weight: 700;
+          font-size: 12px;
+          font-weight: 500;
           color: #8d8d8d;
         }
         &__number {
-          font-size: 20px;
-          font-weight: 700;
+          font-size: 16px;
+          font-weight: 500;
           color: #000;
         }
         &:hover {
           background-color: #fff;
-          
           margin-top: 24px;
           box-shadow: 0px 0px 11px 3px #e9e9e9;
           border: 4px solid aquamarine;
           transition: all 0.5s ease-in-out;
         }
+        @media only screen and (max-width: 425px) {
+          min-width: 32px;
+          margin: 0 2px;
+          &__label {
+            font-size: 10px;
+          }
+          &__number {
+            font-size: 10px;
+          }
+        }
       }
+    }
+    @media only screen and (max-width: 768px) {
+      width: 60%;
+    }
+    @media only screen and (max-width: 425px) {
+      width: 80%;
     }
   }
 }

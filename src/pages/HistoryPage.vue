@@ -32,10 +32,10 @@ export default defineComponent({
   height: calc(100vh - 65px);
   &__activities {
     width: 100%;
-    height: calc(100% - 60px);
+    height: calc(100% - 148px);
     padding: 0 50px;
     @media only screen and (max-width: 1024px) {
-      padding: 0 20px;
+      padding: 0 24px;
     }
   }
   &__calendar {
