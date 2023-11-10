@@ -5,7 +5,7 @@
         <ProductCard :product="product.info" isDetail />
       </div>
       <div class="single-product__header__action">
-        <q-btn color="green" outline>
+        <q-btn color="green" outline @click="showModal = true">
           انتخاب طرح
           <q-icon name="local_florist" />
         </q-btn>
@@ -39,6 +39,27 @@
         </ul>
       </div>
     </div>
+    <q-dialog
+      v-model="showModal"
+      persistent
+      transition-show="scale"
+      transition-hide="scale"
+    >
+      <q-card class="bg-teal text-white" style="width: 520px">
+        <q-card-section class="bg-teal text-white">
+          <div class="text-h6">دریافت کد</div>
+        </q-card-section>
+        <q-card-section class="bg-white text-teal">
+          <div class="code">
+            <div class="code__value">code</div>
+          </div>
+        </q-card-section>
+        <q-card-actions align="right" class="bg-white text-teal">
+          <q-btn outline label="متوجه شدم" color="warning" v-close-popup />
+          <q-btn flat label="کپی" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -52,6 +73,7 @@ export default {
     ProductCard,
   },
   setup() {
+    const showModal = ref(false);
     const product = ref({
       info: {
         id: 0,
@@ -75,12 +97,28 @@ export default {
     });
     return {
       product,
+      showModal,
     };
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.code {
+  width: 100%;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &__value {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 80px;
+    border: 2px dashed #868686;
+    font-size: 24px;
+  }
+}
 .single-product {
   width: 100%;
   height: 700px;
