@@ -7,6 +7,10 @@ const routes = [
         path: "",
         component: () => import("pages/HistoryPage.vue"),
       },
+      {
+        path: "/:date",
+        component: () => import("pages/products/_date.vue"),
+      },
     ],
   },
 

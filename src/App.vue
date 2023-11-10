@@ -11,7 +11,7 @@ export default defineComponent({
 </script>
 <style>
 body {
-  background-color: #fcfcfa;
+  background-color: #f7f7f5;
 }
 ::-webkit-scrollbar {
   display: none;

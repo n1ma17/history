@@ -6,7 +6,6 @@
           v-model="selectedMonth"
           :options="months"
           v-bind="attrs"
-          label="انتخاب ماه"
           @update:model-value="getDaysInMonth()"
         />
       </div>
@@ -24,6 +23,7 @@
           :key="day"
           class="calendar__content__days__day fade"
           :class="+today === day.day ? 'active' : ''"
+          @click="selectedDateHandler(day)"
         >
           <span class="calendar__content__days__day__label">{{
             day.label
@@ -58,15 +58,17 @@
 </template>
 
 <script>
-import { ref, onMounted, toRefs } from "vue";
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import jalaliMoment from "jalali-moment";
 export default {
   name: "CalendarComponent",
   setup() {
     const attrs = {
-      outlined: true,
+      borderless: true,
       dense: true,
     };
+    const router = useRouter();
     const currentMonth = jalaliMoment().jMonth() + 1;
     const scrollableElement = ref(null);
     const months = [];
@@ -126,8 +128,16 @@ export default {
         document.getElementById("calendar__content__days").scrollLeft += -32;
       }
     };
+    const selectedDateHandler = (day) => {
+      const date = jalaliMoment(
+        `${day.day}/${selectedMonth.value.monthNum}/${currentYear.value}`,
+        "jDD/jMM/jYYYY"
+      ).format("jDD-jMM-jYYYY");
+      router.push({ path: `/${date}` });
+    };
     return {
       months,
+      selectedDateHandler,
       selectedMonth,
       scrollSlider,
       getDaysInMonth,
