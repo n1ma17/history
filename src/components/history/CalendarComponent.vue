@@ -133,7 +133,12 @@ export default {
         `${day.day}/${selectedMonth.value.monthNum}/${currentYear.value}`,
         "jDD/jMM/jYYYY"
       ).format("jDD-jMM-jYYYY");
-      router.push({ path: `/${date}` });
+      router.push({
+        path: "/products",
+        query: {
+          date: date,
+        },
+      });
     };
     return {
       months,

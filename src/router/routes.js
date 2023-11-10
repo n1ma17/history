@@ -8,8 +8,12 @@ const routes = [
         component: () => import("pages/HistoryPage.vue"),
       },
       {
-        path: "/:date",
-        component: () => import("pages/products/_date.vue"),
+        path: "/products",
+        component: () => import("pages/products/index.vue"),
+      },
+      {
+        path: "/products/:id",
+        component: () => import("pages/products/single-product/_id.vue"),
       },
     ],
   },

@@ -13,14 +13,17 @@
           </span>
           <span class="product-card__content__info__percent__text">تخفیف</span>
         </div>
-        <div class="product-card__content__info__text">
+        <div v-if="product.date" class="product-card__content__info__text">
           <span>برای خرید</span>
           <span> کتاب های</span>
           <span> متنی و صوتی</span>
         </div>
+        <div v-else class="product-card__content__info__infinit">
+          <q-icon name="all_inclusive" size="xl" color="#188585" />
+        </div>
       </div>
     </div>
-    <div class="product-card__action">
+    <div v-if="!isDetail" class="product-card__action">
       <div class="product-card__action__circule-left"></div>
       <div class="product-card__action__circule-right"></div>
       <div class="product-card__action__dots">
@@ -35,7 +38,7 @@
         {{ product.cost }}
         <q-icon name="nest_eco_leaf" size="sm" color="green" />
       </div>
-      <q-btn flat dense style="color: #188585">
+      <q-btn flat dense style="color: #188585" @click="handleSelect">
         {{ product.used ? "مشاهده" : "مشاهده و دریافت" }}
         <q-icon name="chevron_left" size="sm" color="#188585" />
       </q-btn>
@@ -44,7 +47,7 @@
 </template>
 
 <script>
-import { computed, ref } from "vue";
+import { computed, ref, defineEmits } from "vue";
 import jalaliMoment from "jalali-moment";
 export default {
   name: "ProductCard",
@@ -53,8 +56,13 @@ export default {
       type: Object,
       default: () => ({}),
     },
+    isDetail: {
+      type: Boolean,
+      default: false,
+    },
   },
-  setup(props) {
+  emits: ["selectTicket"],
+  setup(props, { emit }) {
     const todayJalali = ref(jalaliMoment().locale("fa"));
     const persianDate = (date) =>
       jalaliMoment(date, "jDD/jMM/jYYYY")
@@ -70,13 +78,13 @@ export default {
         const day = hour / 24;
         return `${Math.trunc(day)} روز و ${Math.trunc(hour)} ساعت دیگر`;
       }
-      // .isAfter(
-      //   jalaliMoment(todayJalali.value, "jDD/jMM/jYYYY"),
-      //   "jyear"
-      // );
       return "";
     });
+    const handleSelect = () => {
+      emit("selectTicket", { id: props.product.id });
+    };
     return {
+      handleSelect,
       timeTracker,
       todayJalali,
       persianDate,
@@ -216,7 +224,7 @@ export default {
         }
       }
       &__text {
-        border-left: 1px solid #fff;
+        border-left: 3px solid #fff;
         width: 50%;
         font-size: 12px;
         font-weight: 500;
@@ -225,7 +233,30 @@ export default {
         align-items: flex-start;
         padding-left: 12px;
       }
+      &__infinit {
+        border-left: 3px solid #fff;
+        font-size: 36px;
+      }
+      @media only screen and (max-width: 425px) {
+        &__percent {
+          width: 40%;
+          font-size: 32px;
+          &__text {
+            font-size: 16px;
+            margin-top: -12px;
+          }
+        }
+        &__text {
+          width: 60%;
+          font-size: 10px;
+          padding-left: 8px;
+        }
+      }
     }
+  }
+  &:hover {
+    transform: translateY(-12px);
+    transition: all 0.4s ease-in-out;
   }
 }
 </style>
