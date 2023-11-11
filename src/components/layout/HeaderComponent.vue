@@ -28,10 +28,14 @@
             :offset="[0, 5]"
           >
             <q-item clickable>
-              <q-item-section>New tab</q-item-section>
+              <q-item-section @click="navigateHandler('home')"
+                >صفحه اصلی</q-item-section
+              >
             </q-item>
             <q-item clickable>
-              <q-item-section>New incognito tab</q-item-section>
+              <q-item-section @click="navigateHandler('product')"
+                >لیست محصولات</q-item-section
+              >
             </q-item>
           </q-menu>
         </q-btn>
@@ -48,23 +52,30 @@
         <q-btn
           class="header__content__download__btn"
           dense
-          rounded
-          :size="size"
           color="green"
           unelevated
           label="نصب طاقچه"
         />
       </div>
-
     </div>
   </q-header>
 </template>
 
 <script>
+import { useRouter } from "vue-router";
 export default {
   name: "HeaderComponent",
-  setup() {
-    return {};
+  setup(_, { emit }) {
+    const toggleRightDrawer = () => {
+      emit("toggleRightDrawer")
+    };
+    const navigateHandler = (route) => {
+      emit("routeHandler", route)
+    };
+    return {
+      navigateHandler,
+      toggleRightDrawer,
+    };
   },
 };
 </script>

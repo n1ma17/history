@@ -1,19 +1,24 @@
 <template>
-  <div class="activities">
+  <q-card v-if="loading" flat class="spinner-loading">
+    <q-spinner-gears color="teal" size="5em" />
+    <span>در حال دریافت اطلاعات...</span>
+  </q-card>
+  <div v-else class="activities">
     <div class="activities__total-point">
       <div class="activities__total-point__content">
         <span class="activities__total-point__content__text q-ml-sm">{{
-          totalPoint
+          profile.wallet
         }}</span>
         <q-icon name="nest_eco_leaf" size="sm" color="green" />
       </div>
     </div>
+
     <div class="activities__content">
       <div class="activities__content__branch"></div>
-      <div class="activities__content__cards">
+      <div v-if="histories?.length" class="activities__content__cards">
         <div
           class="activities__content__cards__single-card"
-          v-for="item in cards"
+          v-for="item in histories"
           :key="item.name"
         >
           <span>{{ item.time }}</span>
@@ -21,6 +26,11 @@
             <HistoryCard :cardInfo="item" />
           </div>
         </div>
+      </div>
+      <div v-else class="activities__content__cards">
+        <span class="activities__content__cards__nodata-card"
+          >فعالیتی یافت نشد</span
+        >
       </div>
     </div>
     <div class="activities__vase">
@@ -32,64 +42,60 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import HistoryCard from "src/components/cards/HistoryCard.vue";
+import { api } from "boot/axios";
 export default {
   name: "ActivitiesComponent",
   components: {
     HistoryCard,
   },
   setup() {
-    const cards = ref([
-      {
-        title: "Total Activities1",
-        value: "240",
-        status: true,
-        time: "12:00",
-      },
-      {
-        title: "Total Activities2",
-        value: "5",
-        status: false,
-        time: "16:40",
-      },
-      {
-        title: "Total Activities3",
-        value: "122",
-        status: true,
-        time: "22:10",
-      },
-
-      {
-        title: "Total Activities4",
-        value: "132",
-        status: true,
-        time: "02:10",
-      },
-
-      {
-        title: "Total Activities5",
-        value: "132",
-        status: true,
-        time: "02:10",
-      },
-
-      {
-        title: "Total Activities6",
-        value: "132",
-        status: true,
-        time: "02:10",
-      },
-    ]);
+    const histories = ref([]);
+    const loading = ref(false);
+    const profile = ref({});
+    const getHistories = () => {
+      loading.value = true;
+      api
+        .get("/getHistories")
+        .then((res) => {
+          console.log(res.data);
+          histories.value = res.data.data;
+        })
+        .finally(() => {
+          loading.value = false;
+        });
+    };
+    onMounted(() => {
+      getHistories();
+      localStorage.getItem("profile") &&
+        (profile.value = JSON.parse(localStorage.getItem("profile")));
+    });
     return {
-      cards,
+      histories,
       totalPoint: 300,
+      loading,
+      profile,
     };
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.spinner-loading {
+  width: 100%;
+  height: 100vh;
+  background-color: #f7f7f5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap:16px;
+  > span {
+    font-size: 16px;
+    color: #868686;
+  }
+}
 .activities {
   width: 100%;
   height: 100%;
@@ -170,6 +176,15 @@ export default {
       overflow-y: scroll;
       overflow-x: hidden;
       padding: 24px;
+      &__nodata-card {
+        background-color: #fff;
+        border-radius: 0 40px 0 40px;
+        box-shadow: 0px 0px 11px 3px #e9e9e9;
+        padding: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
       &__single-card {
         width: 100%;
         height: 100%;
@@ -182,7 +197,7 @@ export default {
           font-size: 16px;
           font-weight: 500;
           @media only screen and (max-width: 768px) {
-            font-size: 10px;
+            font-size: 8px;
           }
         }
         &__history {
@@ -192,6 +207,9 @@ export default {
             width: 280px;
             height: 60px;
           }
+        }
+        @media only screen and (max-width: 425px) {
+          gap: 4px;
         }
       }
     }

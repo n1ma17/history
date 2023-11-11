@@ -1,17 +1,26 @@
 <template>
-  <div class="single-product">
+  <q-card v-if="loading" flat class="spinner-loading">
+    <q-spinner-gears color="teal" size="5em" />
+    <span>در حال دریافت اطلاعات...</span>
+  </q-card>
+  <div v-else class="single-product">
     <div class="single-product__header">
       <div class="single-product__header__image">
-        <ProductCard :product="product.info" isDetail />
+        <ProductCard :product="product?.info" isDetail />
       </div>
       <div class="single-product__header__action">
-        <q-btn color="green" outline @click="showModal = true">
-          انتخاب طرح
+        <q-btn
+          v-if="!product?.info?.used"
+          color="green"
+          outline
+          @click="showModal = true"
+        >
+          {{ buttonLabel }}
           <q-icon name="local_florist" />
         </q-btn>
         <div class="single-product__header__action__leaf">
           <span>برگ مورد نیاز:</span>
-          <span class="single-product__header__leaf__cost">
+          <span class="single-product__header__action__leaf__cost">
             {{ product?.info?.cost }}
           </span>
           <q-icon name="energy_savings_leaf" size="sm" color="green" />
@@ -20,14 +29,14 @@
     </div>
     <div class="single-product__description">
       <span class="single-product__description__title">{{
-        product.info.title
+        product?.info?.title
       }}</span>
       <div class="single-product__description__rules">
         <span class="single-product__description__rules__title">
           قوانین استفاده
         </span>
         <ul>
-          <li v-for="(rule, i) in product.rules" :key="i">{{ rule }}</li>
+          <li v-for="(rule, i) in product?.rules" :key="i">{{ rule }}</li>
         </ul>
       </div>
       <div class="single-product__description__guides">
@@ -35,7 +44,7 @@
           قوانین استفاده
         </span>
         <ul>
-          <li v-for="(guide, i) in product.guides" :key="i">{{ guide }}</li>
+          <li v-for="(guide, i) in product?.guides" :key="i">{{ guide }}</li>
         </ul>
       </div>
     </div>
@@ -51,12 +60,18 @@
         </q-card-section>
         <q-card-section class="bg-white text-teal">
           <div class="code">
-            <div class="code__value">code</div>
+            <div class="code__value">{{ codeText }}</div>
           </div>
         </q-card-section>
         <q-card-actions align="right" class="bg-white text-teal">
-          <q-btn outline label="متوجه شدم" color="warning" v-close-popup />
-          <q-btn flat label="کپی" v-close-popup />
+          <q-btn
+            outline
+            label="متوجه شدم"
+            color="warning"
+            v-close-popup
+            @click="routeToHome"
+          />
+          <q-btn flat label="کپی" v-close-popup @click="copyToClipboard" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -64,46 +79,102 @@
 </template>
 
 <script>
-import { ref } from "vue";
-
+import { ref, onMounted, computed } from "vue";
+import { useRouter } from "vue-router";
+import { useQuasar } from "quasar";
 import ProductCard from "src/components/cards/ProductCard.vue";
+import { api } from "boot/axios";
 export default {
   name: "SingleProduct",
   components: {
     ProductCard,
   },
   setup() {
+    const $q = useQuasar();
     const showModal = ref(false);
-    const product = ref({
-      info: {
-        id: 0,
-        title: "تخفیف ۳۰٪ کتاب (صوتی و متنی)",
-        percent: "10",
-        date: "25/08/1402",
-        cost: 125,
-      },
-      rules: [
-        "این تخفیف روی قیمت اصلی کتاب انتخابی شما اعمال می‌شود‌؛ بنابراین اگر تخفیف دیگری از سمت طاقچه روی کتابی اعمال شده باشد، استفاده از کد تخفیف رویش آن را غیرفعال می‌کند.",
-        "برای خرید مجله‌ها و روزنامه‌ها هم می توان از این تخفیف استفاده کرد.",
-        "مهلت استفاده از تخفیف ۳۰ روز پس از دریافت آن است.",
-        "این تخفیف روی کتاب‌های تعدادی از ناشران قابل استفاده نیست. اسم این نشرها در راهنمای رویش آمده است.",
-      ],
-      guides: [
-        "تعداد برگ‌های لازم برای دریافت تخفیف را جمع‌آوری کن. سپس دکمه دریافت جایزه را بزن.",
-        "پس از کلیک کردن روی «دریافت جایزه» کد تخفیف فعال می‌شود. دکمه «کپی کن» را فشار بده تا کد را کپی کنی.",
-        "بعد از کپی کردن کد به قسمت«بی‌نهایت» برو. دکمهٔ «خرید اشتراک» یا «تمدید اشتراک» را انتخاب کن.",
-        "در قسمت «کد تخفیف یا هدیه دارم» کد تخفیفی که کپی کرده‌ای وارد کن و دکمه ثبت را بزن.",
-      ],
+    const loading = ref(true);
+    const router = useRouter();
+    const profile = ref({});
+    const codeText = ref("code");
+    const product = ref({});
+    const buttonLabel = computed(() => {
+      return profile?.value?.wallet >= product.value?.info?.cost
+        ? "  انتخاب طرح"
+        : "برای دریافت جایزه بیشتر برگ جمع کن";
+    });
+    const routeToHome = () => {
+      router.push("/");
+    };
+    const getProduct = async () => {
+      loading.value = true;
+      await api
+        .get(`/getSingleProduct`)
+        .then((res) => {
+          product.value = res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          loading.value = false;
+        });
+    };
+    const copyToClipboard = () => {
+      console.log($q.notify());
+      if (!navigator.clipboard) {
+        fallbackCopyTextToClipboard(codeText.value);
+        return;
+      }
+      navigator.clipboard.writeText(codeText.value).then(
+        function () {
+          $q.notify({
+            type: "positive",
+            position: "top-left",
+            message: `کد تخفیف ${codeText.value} کپی شد`,
+          });
+        },
+        function (err) {
+          $q.notify({
+            type: "negative",
+            message: "عملیات با خطا مواجه شد",
+          });
+        }
+      );
+    };
+    onMounted(() => {
+      localStorage.getItem("profile") &&
+        (profile.value = JSON.parse(localStorage.getItem("profile")));
+      getProduct();
     });
     return {
       product,
       showModal,
+      routeToHome,
+      codeText,
+      copyToClipboard,
+      profile,
+      buttonLabel,
+      loading,
     };
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.spinner-loading {
+  width: 100%;
+  height: 100vh;
+  background-color: #f7f7f5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap:16px;
+  > span {
+    font-size: 16px;
+    color: #868686;
+  }
+}
 .code {
   width: 100%;
   height: 200px;
@@ -129,6 +200,7 @@ export default {
 
   &__header {
     width: 50%;
+    max-width: 600px;
     padding: 0 20px;
     display: flex;
     flex-direction: column;

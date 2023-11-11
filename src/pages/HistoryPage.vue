@@ -10,17 +10,36 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { ref, onMounted } from "vue";
 import Calendar from "src/components/history/CalendarComponent.vue";
 import Activities from "src/components/history/ActivitiesComponent.vue";
+import { api } from "boot/axios";
 
-export default defineComponent({
+export default {
   name: "HistoryPage",
   components: {
     Calendar,
     Activities,
   },
-});
+  setup() {
+    const profile = ref({});
+    const getProfile = () => {
+      api
+        .get("/getProfile")
+        .then((res) => {
+          profile.value = res.data.data;
+          localStorage.setItem("profile", JSON.stringify(res.data.data));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    onMounted(() => {
+      getProfile();
+    });
+    return {};
+  }
+};
 </script>
 <style scoped lang="scss">
 .history-page {

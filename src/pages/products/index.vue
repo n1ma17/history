@@ -6,7 +6,7 @@
           تعداد برگ های من:
         </span>
         <span class="products__banner__content__user-leaf">
-          {{ userLeaf }}
+          {{ profile.wallet }}
         </span>
         <q-icon name="spa" size="sm" color="#188585" />
       </div>
@@ -16,7 +16,15 @@
         <ProductCard :product="card" @selectTicket="routToSingleProduct" />
       </div>
     </div>
-    <q-spinner-gears v-if="loading" color="teal" size="3em" />
+    <q-spinner-gears v-if="loading" color="teal" size="4em" />
+    <q-btn
+      v-if="nextPage && !loading"
+      flat
+      size="md"
+      color="black"
+      label="بارگذاری بیشتر"
+      @click="getData()"
+    />
   </div>
 </template>
 
@@ -24,6 +32,7 @@
 import ProductCard from "src/components/cards/ProductCard.vue";
 import { ref, onMounted, onUnmounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { api } from "boot/axios";
 export default {
   name: "ProductsPage",
   components: {
@@ -33,77 +42,72 @@ export default {
     const userLeaf = ref(180);
     const route = useRoute();
     const router = useRouter();
-    const products = ref([
-      {
-        id: Math.random() * 1024,
-        percent: "10",
-        date: "25/08/1402",
-        cost: 125,
-        used: false,
-      },
-      {
-        id: Math.random() * 1024,
-        percent: "10",
-        date: null,
-        cost: 125,
-        used: false,
-      },
-      {
-        id: Math.random() * 1024,
-        percent: "10",
-        date: "25/08/1402",
-        cost: 125,
-        used: true,
-      },
-      {
-        id: Math.random() * 1024,
-        percent: "10",
-        date: "25/08/1402",
-        cost: 125,
-        used: false,
-      },
-    ]);
+    const products = ref([]);
+    const nextPage = ref(1);
+    const profile = ref({});
+    const currentPage = ref(1);
     let loading = ref(false);
     const scrollComponent = ref(null);
-    const getData = () => {
-      products.value.push({
-        id: Math.random() * 1024,
-        percent: "10",
-        date: "25/08/1402",
-        cost: 125 * Math.random(),
-        used: false,
-      });
+    const debounce = (func, delay) => {
+      let timeoutId;
+      return function () {
+        const context = this;
+        const args = arguments;
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+          func.apply(context, args);
+        }, delay);
+      };
     };
-    const loadMorePosts = async () => {
+    const getData = async () => {
       loading.value = true;
-      await getData();
-      loading.value = false;
-    };
-    const handleScroll = (e) => {
-      let element = scrollComponent.value;
-      if (element.getBoundingClientRect().bottom < window.innerHeight) {
-        loadMorePosts();
+      if (nextPage.value) {
+        await api
+          .get(`/getProducts?page=${nextPage.value}&pageSize=10`)
+          .then((res) => {
+            products.value = [...products.value, ...res.data.data];
+            nextPage.value = res.data.nextPage;
+            currentPage.value = res.data.currentPage;
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+          .finally(() => {
+            loading.value = false;
+          });
       }
     };
+    const handleScroll = debounce(async () => {
+      let element = scrollComponent.value;
+      if (
+        element.getBoundingClientRect().bottom < window.innerHeight &&
+        nextPage.value
+      ) {
+        await getData();
+      }
+    }, 300);
     onMounted(() => {
-      // for (let i = 0; i < 4; i++) {
-      //   getData();
-      // }
+      localStorage.getItem("profile") &&
+        (profile.value = JSON.parse(localStorage.getItem("profile")));
+      getData();
       window.addEventListener("scroll", handleScroll);
     });
     onUnmounted(() => {
       window.removeEventListener("scroll", handleScroll);
     });
     const routToSingleProduct = (e) => {
-      console.log({ e });
       router.push(`/products/${e.id}`);
     };
     return {
       products,
+      profile,
+      nextPage,
+      currentPage,
       userLeaf,
       scrollComponent,
       loading,
       routToSingleProduct,
+      getData,
     };
   },
 };
@@ -117,9 +121,12 @@ export default {
   flex-direction: column;
   padding: 32px 50px;
   gap: 32px;
+  @media only screen and (max-width: 1024px) {
+    padding: 32px 20px;
+  }
   &__banner {
     width: 100%;
-    height: 250px;
+    height: 300px;
     background-image: url("src/assets/images/hills.jpg");
     background-size: cover;
     background-position: center;
@@ -129,6 +136,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    margin-top: 32px;
     &__content {
       color: #188585;
       display: flex;
@@ -153,7 +161,7 @@ export default {
     width: 100%;
     display: flex;
     align-items: flex-start;
-    justify-content: space-between;
+    justify-content: flex-start;
     flex-wrap: wrap;
     gap: 24px;
     padding: 24px 0;
@@ -162,6 +170,9 @@ export default {
       width: 30%;
       height: fit-content;
       cursor: pointer;
+      @media only screen and (max-width: 1024px) {
+        width: 100%;
+      }
     }
   }
 }

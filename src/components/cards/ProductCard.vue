@@ -29,7 +29,7 @@
       <div class="product-card__action__dots">
         <div
           class="product-card__action__dots__dot"
-          v-for="(_, index) in 24"
+          v-for="(_, index) in 20"
           :key="index"
         ></div>
       </div>
@@ -74,8 +74,8 @@ export default {
         : null;
       if (sec > todayJalali.value.format("X")) {
         const diff = sec - todayJalali.value.format("X");
-        const hour = diff / 3600;
-        const day = hour / 24;
+        const hour = (diff / 3600) % 24;
+        const day = (diff / 3600) / 24;
         return `${Math.trunc(day)} روز و ${Math.trunc(hour)} ساعت دیگر`;
       }
       return "";
@@ -143,6 +143,7 @@ export default {
       justify-content: space-between;
       position: absolute;
       flex-wrap: nowrap;
+      overflow: hidden;
       top: -4px;
       right: 0;
       padding: 0 20px;
@@ -153,6 +154,14 @@ export default {
 
         border-radius: 50%;
         background-color: #fff;
+      }
+      @media only screen and (max-width: 378px) {
+        &__dots {
+          &__dot {
+            width: 2px;
+            height: 2px;
+          }
+        }
       }
     }
     &__circule-right,

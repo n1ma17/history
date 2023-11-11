@@ -2,7 +2,7 @@
   <div class="card">
     <span class="card__title">{{ cardInfo.title }}</span>
     <div class="card__status">
-      <span class="card__status__value q-ml-sm"
+      <span class="card__status__value"
         >{{ cardInfo.value }} {{ !cardInfo.status ? "-" : null }}</span
       >
       <q-icon
@@ -52,6 +52,9 @@ export default {
   &__title {
     font-size: 16px;
     font-weight: 700;
+    @media only screen and (max-width: 425px) {
+      font-size: 12px;
+    }
   }
   @media only screen and (max-width: 768px) {
     &__status {
@@ -64,6 +67,8 @@ export default {
     }
   }
   @media only screen and (max-width: 425px) {
+    padding: 16px;
+    border-radius: 0 30px 0 30px;
     &__status {
       &__value {
         font-size: 10px;
