@@ -59,7 +59,6 @@ export default {
       api
         .get("/getHistories")
         .then((res) => {
-          console.log(res.data);
           histories.value = res.data.data;
         })
         .finally(() => {

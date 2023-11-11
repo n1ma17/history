@@ -38,7 +38,13 @@
         {{ product.cost }}
         <q-icon name="nest_eco_leaf" size="sm" color="green" />
       </div>
-      <q-btn flat dense style="color: #188585" @click="handleSelect">
+      <q-btn
+        :disabled="product.used"
+        flat
+        dense
+        style="color: #188585"
+        @click="handleSelect"
+      >
         {{ product.used ? "مشاهده" : "مشاهده و دریافت" }}
         <q-icon name="chevron_left" size="sm" color="#188585" />
       </q-btn>
@@ -75,7 +81,7 @@ export default {
       if (sec > todayJalali.value.format("X")) {
         const diff = sec - todayJalali.value.format("X");
         const hour = (diff / 3600) % 24;
-        const day = (diff / 3600) / 24;
+        const day = diff / 3600 / 24;
         return `${Math.trunc(day)} روز و ${Math.trunc(hour)} ساعت دیگر`;
       }
       return "";
@@ -107,7 +113,7 @@ export default {
   width: 100%;
   height: 100%;
   border-radius: 16px;
-  box-shadow: 0px 5px 10px 0px #bdbdbd4d;
+  box-shadow: 0px 0px 0px 0px #bdbdbd4d;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -135,7 +141,6 @@ export default {
     justify-content: space-between;
     color: #484848;
     padding: 0 20px;
-
     &__dots {
       width: 100%;
       height: 12px;
@@ -172,7 +177,7 @@ export default {
       background-color: #f7f7f5;
       position: absolute;
       top: -20px;
-      box-shadow: inset -1px 0px 10px 0px #b4b4b4d6;
+      box-shadow: inset 0px 0px 5px 0px #b4b4b4d6;
     }
     &__circule-right {
       right: -20px;

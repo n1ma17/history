@@ -13,7 +13,7 @@
           v-if="!product?.info?.used"
           color="green"
           outline
-          @click="showModal = true"
+          @click="openDialog"
         >
           {{ buttonLabel }}
           <q-icon name="local_florist" />
@@ -54,7 +54,11 @@
       transition-show="scale"
       transition-hide="scale"
     >
-      <q-card class="bg-teal text-white" style="width: 520px">
+      <q-card v-if="modalLoading" flat class="spinner-loading">
+        <q-spinner-gears color="teal" size="5em" />
+        <span>در حال دریافت کد...</span>
+      </q-card>
+      <q-card v-else class="bg-teal text-white" style="width: 520px">
         <q-card-section class="bg-teal text-white">
           <div class="text-h6">دریافت کد</div>
         </q-card-section>
@@ -71,7 +75,13 @@
             v-close-popup
             @click="routeToHome"
           />
-          <q-btn flat label="کپی" v-close-popup @click="copyToClipboard" />
+          <q-btn
+            v-if="!disable"
+            flat
+            label="کپی"
+            v-close-popup
+            @click="copyToClipboard"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -92,7 +102,9 @@ export default {
   setup() {
     const $q = useQuasar();
     const showModal = ref(false);
+    const disable = ref(false);
     const loading = ref(true);
+    const modalLoading = ref(false);
     const router = useRouter();
     const profile = ref({});
     const codeText = ref("code");
@@ -119,8 +131,24 @@ export default {
           loading.value = false;
         });
     };
+    const openDialog = async () => {
+      showModal.value = true;
+      modalLoading.value = true;
+      await api
+        .get(`/getDiscountCode`)
+        .then((res) => {
+          codeText.value = res.data.data.code;
+        })
+        .catch((err) => {
+          console.log(err);
+          disable.value = true;
+          codeText.value = "دریافت کد با خطا مواجه شد";
+        })
+        .finally(() => {
+          modalLoading.value = false;
+        });
+    };
     const copyToClipboard = () => {
-      console.log($q.notify());
       if (!navigator.clipboard) {
         fallbackCopyTextToClipboard(codeText.value);
         return;
@@ -149,12 +177,15 @@ export default {
     return {
       product,
       showModal,
+      openDialog,
+      modalLoading,
       routeToHome,
       codeText,
       copyToClipboard,
       profile,
       buttonLabel,
       loading,
+      disable,
     };
   },
 };
@@ -169,7 +200,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap:16px;
+  gap: 16px;
   > span {
     font-size: 16px;
     color: #868686;
@@ -275,14 +306,15 @@ export default {
   }
   @media only screen and (max-width: 1024px) {
     flex-direction: column;
+    align-items: center;
     &__header {
       width: 100%;
       padding: 0;
-
-      &__image {
+      align-items: center;
+      &__action {
         width: 100%;
       }
-      &__leaf {
+      &__image {
         width: 100%;
       }
     }

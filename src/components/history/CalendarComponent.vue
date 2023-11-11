@@ -21,8 +21,9 @@
         <div
           v-for="day in daysOfMonth"
           :key="day"
+          id="days-element"
           class="calendar__content__days__day fade"
-          :class="+today === day.day ? 'active' : ''"
+          :class="+today === day.day && +selectedMonth.monthNum === currentMonth ? 'active' : ''"
           @click="selectedDateHandler(day)"
         >
           <span class="calendar__content__days__day__label">{{
@@ -58,7 +59,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import jalaliMoment from "jalali-moment";
 export default {
@@ -71,6 +72,7 @@ export default {
     const router = useRouter();
     const currentMonth = jalaliMoment().jMonth() + 1;
     const scrollableElement = ref(null);
+    const dayElementWidth = ref(null);
     const months = [];
     const daysOfMonth = ref([]);
     const selectedMonth = ref(null);
@@ -88,8 +90,20 @@ export default {
       selectedMonth.value = months[currentMonth - 1];
       await getDaysInMonth();
       await scrolltoToday();
+      updateElementWidth();
+      window.addEventListener("resize", updateElementWidth);
+    });
+    onUnmounted(() => {
+      window.removeEventListener("resize", updateElementWidth);
     });
     const getDaysInMonth = () => {
+      if(+selectedMonth.value.monthNum !== currentMonth) {
+        document.getElementById("calendar__content__days").scrollLeft =
+          (today.value) * (dayElementWidth.value);
+      }else {
+        document.getElementById("calendar__content__days").scrollLeft =
+          (today.value) * (-1 * dayElementWidth.value);
+      }
       daysOfMonth.value = [];
       // Use Moment.js to get the number of days in the selected month
       const daysInMonth = jalaliMoment(
@@ -114,18 +128,28 @@ export default {
       }
     };
     const today = ref(+jalaliMoment().locale("fa").format("DD"));
+
     const scrolltoToday = () => {
-      document.getElementById("calendar__content__days").scrollLeft =
-        (today.value - 1) * -32;
-      document.getElementById("calendar__content__days").scrollLeft += 2 * 32;
+      if(+selectedMonth.value.monthNum === currentMonth) {
+        dayElementWidth.value =
+          document.getElementById("days-element").offsetWidth;
+        document.getElementById("calendar__content__days").scrollLeft =
+          (today.value) * (-1 * dayElementWidth.value);
+      }
     };
     const scrollSlider = (index) => {
       if (index === 1) {
-        today.value--;
-        document.getElementById("calendar__content__days").scrollLeft += 32;
+        document.getElementById("calendar__content__days").scrollLeft +=
+          dayElementWidth.value;
       } else {
-        today.value++;
-        document.getElementById("calendar__content__days").scrollLeft += -32;
+        document.getElementById("calendar__content__days").scrollLeft +=
+          -1 * dayElementWidth.value;
+      }
+    };
+    const updateElementWidth = () => {
+      if (document.getElementById("days-element")) {
+        dayElementWidth.value =
+          document.getElementById("days-element").offsetWidth;
       }
     };
     const selectedDateHandler = (day) => {
@@ -152,6 +176,7 @@ export default {
       currentMonth,
       attrs,
       scrollableElement,
+      dayElementWidth
     };
   },
 };
