@@ -3,6 +3,11 @@
 A Quasar Project
 
 ## Install the dependencies
+
+```bash
+npm i -g @quasar/cli
+```
+
 ```bash
 yarn
 # or

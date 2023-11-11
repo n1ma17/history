@@ -15,8 +15,6 @@
   "dependencies": {
     "@quasar/extras": "^1.16.4",
     "axios": "^1.2.1",
-    "dayjs": "^1.11.10",
-    "dayjs-jalali": "^0.0.2",
     "jalali-moment": "^3.3.11",
     "jalaliday": "^2.3.0",
     "quasar": "^2.6.0",
